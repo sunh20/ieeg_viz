@@ -8,3 +8,9 @@ Created 20220225 by SS
 ```
 >> git submodule init; git submodule update
 ```
+- Open "plot_ieeg_main.m" and change variables as needed
+
+### Assumed files:
+- Completed subject recon (imaging and electrode files)  
+- fieldtrip submodule
+
