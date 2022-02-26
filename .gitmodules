@@ -1,0 +1,3 @@
+[submodule "fieldtrip"]
+	path = fieldtrip
+	url = git@github.com:fieldtrip/fieldtrip.git
