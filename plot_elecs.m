@@ -1,4 +1,4 @@
-function fig = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap)
+function [fig, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap)
 
 if native
     

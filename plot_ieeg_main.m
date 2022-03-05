@@ -7,7 +7,7 @@ ft_defaults
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% user specified variables
-subj_id = '0d5e8e';
+subj_id = '42bcc5';
 subj_dir = '/Users/sunh20/School/Research/subjects/'; 
 e_type = 's';   % s - seeg or depth, c - cortical
 
@@ -30,11 +30,11 @@ assert(strcmp(e_type,'c') || strcmp(e_type,'s'),'e_type input not recognized, pl
 plot_brain(subj_id,subj_dir,native,transparency)
 
 % plot electrodes
-fig = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap);
+[fig, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap);
 
 %% some cmap examples
 
-n_elecs = 126;
+n_elecs = 125;
 
 cmap = zeros(n_elecs, 3);
 cmap(:,1) = rand(n_elecs,1);
