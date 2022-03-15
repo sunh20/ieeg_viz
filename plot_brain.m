@@ -17,9 +17,9 @@ if native
 else
 
 % adding MNI brain plot
-    load(fullfile(recon_dir,'tools','fieldtrip','template','anatomy','surface_pial_left.mat'),'mesh');
+    load(fullfile(pwd,'fieldtrip','template','anatomy','surface_pial_left.mat'),'mesh');
     ft_plot_mesh(mesh);
-    load(fullfile(recon_dir,'tools','fieldtrip','template','anatomy','surface_pial_right.mat'),'mesh');
+    load(fullfile(pwd,'fieldtrip','template','anatomy','surface_pial_right.mat'),'mesh');
     ft_plot_mesh(mesh);
 
     title('colin27 MNI brain')
