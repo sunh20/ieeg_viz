@@ -10,9 +10,6 @@ if native
         case 'c'
             load(fullfile(subj_dir, subj_id,[subj_id '_elec_acpc_fr.mat']), 'elec_acpc_fr');
             elecs = elec_acpc_fr;
-        otherwise
-            disp('something went wrong lol pls msg sam')
-            elecs = [];
     end
     
 else
@@ -27,8 +24,7 @@ e = elecs.elecpos;
 
 fig = scatter3(e(:,1), e(:,2), e(:,3), ...
 'o', 'filled', ...
-'SizeData', e_size, ...
-'MarkerEdgeColor','k');
+'SizeData', e_size);
 
 fig.CData = cmap;
   

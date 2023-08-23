@@ -18,15 +18,15 @@ else
 
 % adding MNI brain plot
     load(fullfile(pwd,'fieldtrip','template','anatomy','surface_pial_left.mat'),'mesh');
-    ft_plot_mesh(mesh);
+    ft_plot_mesh(mesh,'facecolor', [0.8,0.8,0.8]);
     load(fullfile(pwd,'fieldtrip','template','anatomy','surface_pial_right.mat'),'mesh');
-    ft_plot_mesh(mesh);
+    ft_plot_mesh(mesh,'facecolor', [0.8,0.8,0.8]);
 
-    title('colin27 MNI brain')
+    title(sprintf('subj %s electrodes on colin27 MNI brain',subj_id))
 
 end
 
-view_angle = [0 90];
+view_angle = [180 270];
 alpha(transparency)
 view(view_angle);
 material dull;
