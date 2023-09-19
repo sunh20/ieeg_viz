@@ -24,7 +24,8 @@ e = elecs.elecpos;
 
 fig = scatter3(e(:,1), e(:,2), e(:,3), ...
 'o', 'filled', ...
-'SizeData', e_size);
+'SizeData', e_size, ...
+'MarkerEdgeColor','k');
 
 fig.CData = cmap;
   

@@ -9,9 +9,9 @@ ft_defaults
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% user specified variables
-subj_id = '7b2ac8';
+subj_id = 'ab2418';
 subj_dir = '/Users/sunh20/School/Research/subjects/'; 
-fn_kurt_imaging = '7b2ac8_Montage.mat';
+fn_kurt_imaging = 'ab2418_Montage.mat';
 e_type = 's';   % s - seeg or depth, c - cortical
 
 
@@ -28,3 +28,4 @@ elec_mni.label = kurt_img.(fieldname{1}).MontageTable.Contact;
 
 % save mni
 save(fullfile(subj_dir,subj_id,[subj_id, '_elec_mni.mat']),"elec_mni")
+disp('finished')
