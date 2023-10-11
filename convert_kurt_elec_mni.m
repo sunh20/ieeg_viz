@@ -4,14 +4,14 @@
 % created 20230823 | SS
 clear all; close all; clc
 
-% make sure fieldtrip is added to path
+addpath('fieldtrip/')
 ft_defaults
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% user specified variables
-subj_id = 'ab2418';
+subj_id = '0992c2';
 subj_dir = '/Users/sunh20/School/Research/subjects/'; 
-fn_kurt_imaging = 'ab2418_Montage.mat';
+fn_kurt_imaging = '0992c2_Montage.mat';
 e_type = 's';   % s - seeg or depth, c - cortical
 
 
