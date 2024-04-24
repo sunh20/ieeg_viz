@@ -1,4 +1,10 @@
-function [fig, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap)
+function [fig, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap,markercolor)
+
+if ~exist('markercolor','var')
+    markercolor = 'w';
+else
+    markercolor = 'k'
+end
 
 if native
     
@@ -25,7 +31,7 @@ e = elecs.elecpos;
 fig = scatter3(e(:,1), e(:,2), e(:,3), ...
 'o', 'filled', ...
 'SizeData', e_size, ...
-'MarkerEdgeColor','k');
+'MarkerEdgeColor',markercolor);
 
 fig.CData = cmap;
   

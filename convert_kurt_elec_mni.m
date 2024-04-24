@@ -9,9 +9,9 @@ ft_defaults
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% user specified variables
-subj_id = '0992c2';
+subj_id = 'ab82a9';
 subj_dir = '/Users/sunh20/School/Research/subjects/'; 
-fn_kurt_imaging = '0992c2_Montage.mat';
+fn_kurt_imaging = 'ab82a9_Montage.mat';
 e_type = 's';   % s - seeg or depth, c - cortical
 
 

@@ -9,21 +9,24 @@ ft_defaults
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% user specified variables
-subj_id = '0992c2';
-exp = 2;
+subj_id = 'bdc872';
+exp = 1;
 subj_dir = '/Users/sunh20/School/Research/subjects/'; 
 e_type = 's';   % s - seeg or depth, c - cortical
-e_stim = [20,21]; % stim electrodes 
+e_stim = [13,14,8,9]; % TDT stim electrodes 
 
 
-% 7b2ac8: [7,8] 
-% 2a67ba [9,10] 
-% 3fb8ca [15,16] 
-% c765c3 [10,11]
-% 14b3d8 [4,5]
-% ab2418 [27,28]
-% 120d23 [19,20]
+% S1, 7b2ac8: [7,8] 
+% S2, 2a67ba [9,10] 
+% S3, 3fb8ca [15,16] 
+% S4, c765c3 [10,11]
+% S5, 120d23 [19,20]
+% S6, 14b3d8 [4,5]
+% S7, ab2418 [27,28]
 % 0992c2 1: [5,6], 2: [20,21]
+% S9, bdc872 3: [13,14], 10: [8,9]
+% S10, a87316 [3,4]
+% S11: ab82a9 [26,27]
 
 %% plot settings
 
@@ -57,7 +60,7 @@ exportgraphics(f,[subj_id '_EPamp_' mat2str(exp) '.png'],'Resolution',300)
 %% cmap: highlight stim electrodes
 
 % be very careful about TDT to kurt conversion 
-e_stim_corrected = e_stim;
+% e_stim_corrected = e_stim;
 
 flatui = ["#417CA7", "#D93A46", "#4C956C", "#F18F01", "#3C153B", "#f075e6","#94D1BE"];
 n_elecs = length(elecs.elecpos);
@@ -122,10 +125,10 @@ clear seg_average_all EP_amps EP_amps_norm c_lookup
 c_lookup = sky;
 
 % load TDT EP Measure amp data
-load("../3fb8ca_EP_Measure-1_amps.mat")
+load(['../subjects/' subj_id '/' subj_id '_EP_Measure-' num2str(exp) '_amps.mat'])
 
 % load table
-fn_table = [subj_id '_kurt_to_tdt.csv_amps.csv'];
+fn_table = [subj_id '_kurt_to_tdt.csv_amps_' num2str(exp) '.csv'];
 T = readtable(fn_table);
 EP_amps_norm_transformed = T.amp_norm;
 
