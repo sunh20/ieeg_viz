@@ -3,7 +3,7 @@ function [fig, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap,ma
 if ~exist('markercolor','var')
     markercolor = 'w';
 else
-    markercolor = 'k'
+    markercolor = 'k';
 end
 
 if native
