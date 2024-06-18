@@ -9,14 +9,14 @@ addpath(genpath('../predstim/results'))
 ft_defaults
 
 flatui = ["#417CA7", "#D93A46", "#4C956C", "#F18F01", "#3C153B", "#f075e6","#94D1BE"];
+subj_dir = '/Users/sunh20/School/Research/subjects/'; 
+e_type = 's';   % s - seeg or depth, c - cortical
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% user specified variables
-subj_id = '7b2ac8';
+subj_id = 'a87316';
 exp = 1;
-subj_dir = '/Users/sunh20/School/Research/subjects/'; 
-e_type = 's';   % s - seeg or depth, c - cortical
-e_stim = [7,8]; % TDT stim electrodes 
+e_stim = [3,4]; % TDT stim electrodes 
 
 
 % S1, 7b2ac8: [7,8] 
@@ -52,7 +52,7 @@ plot_brain(subj_id,subj_dir,native,transparency)
 
 % plot electrodes
 [fig, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap,'k'); % with black marker
-%[fig, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap); % with white marker
+% [fig, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap); % with white marker
 %% export figure + PNG
 % make sure you change filenames
 
@@ -62,7 +62,7 @@ f = gcf;
 %exportgraphics(f,[subj_id '_EPamp_' mat2str(exp) '.png'],'Resolution',300)
 exportgraphics(f,[subj_id '_run1_' mat2str(exp) '.png'],'Resolution',300)
 
-%% kurt to TDT electrode conversion
+%% kurt to TDT electrode conversion + highlight stim trodes
 % load table
 fn_table = [subj_id '_kurt_to_tdt.csv_amps_' num2str(exp) '.csv'];
 T = readtable(fn_table);
@@ -72,8 +72,7 @@ e_stim_corrected = e_stim;
 e_stim_corrected(1) = T(T.TDT == e_stim(1),:).kurt;
 e_stim_corrected(2) = T(T.TDT == e_stim(2),:).kurt;
 
-%% cmap: highlight stim electrodes
-
+% highlight stim electrodes
 n_elecs = length(elecs.elecpos);
 
 % default color: blue
@@ -84,6 +83,7 @@ cmap = repmat(map, [n_elecs,1]);
 fprintf('confirming stim electrodes %i-%i (%s-%s)\n',e_stim(1),e_stim(2),elecs.label{e_stim_corrected(1)},elecs.label{e_stim_corrected(2)})
 map = validatecolor(flatui(2), 'multiple');
 cmap(e_stim_corrected,:) = repmat(map, [length(e_stim_corrected),1]);
+
 
 %% cmap: EP Measure amplitude response + save new table
 % electrodes that aren't recorded on TDT will be set to 0
@@ -167,6 +167,7 @@ fprintf('confirming stim electrodes %i-%i (%s-%s)\n',e_stim_corrected(1),e_stim_
 % T.amp_norm = EP_amps_norm_transformed;
 % writetable(T,[fn_table '_amps.csv'])
 %% camp from 1vAll SVM results
+% need to have T loaded
 
 % set colormap 
 c_lookup = sky;
@@ -207,28 +208,26 @@ end
 fprintf('n sig chans = %i\n', n_sig_chans)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% create cmap for accuracy vals
+% create cmap for accuracy vals
 
 acc = T.svm1vA;
 
-% set all sig channels to 256
-acc(acc > 0) = 256;
-acc(acc == 0) = 1;
-acc_plot = acc;
+% % set all sig channels to 256
+% acc(acc > 0) = 256;
+% acc(acc == 0) = 1;
+% acc_plot = acc;
 
 % normalize to 0-1
-% acc_norm = acc/max(acc);
-% 
-% % map electrode amp to colormap (256 units)
-% acc_plot = round(acc_norm*256);
-% acc_plot(acc_plot == 0) = 1;
+acc_norm = acc/max(acc);
+
+% map electrode amp to colormap (256 units)
+acc_plot = round(acc_norm*256);
+acc_plot(acc_plot == 0) = 1;
 cmap = c_lookup(acc_plot,:);
 
 % stim - red
 map = validatecolor(flatui(2), 'multiple');
 cmap(e_stim_corrected,:) = repmat(map, [length(e_stim_corrected),1]);
-
-fprintf('confirming stim electrodes %i-%i (%s-%s)\n',e_stim_corrected(1),e_stim_corrected(2),elecs.label{e_stim_corrected(1)},elecs.label{e_stim_corrected(2)})
 
 
 %% example 2
