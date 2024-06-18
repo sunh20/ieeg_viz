@@ -5,6 +5,7 @@ clear all; close all; clc
 % make sure fieldtrip is added to path
 addpath('fieldtrip')
 addpath(genpath('../subjects'))
+addpath(genpath('../predstim/results'))
 ft_defaults
 
 flatui = ["#417CA7", "#D93A46", "#4C956C", "#F18F01", "#3C153B", "#f075e6","#94D1BE"];
@@ -58,7 +59,8 @@ plot_brain(subj_id,subj_dir,native,transparency)
 %savefig([subj_id '_EPamp_' mat2str(exp) '.fig'])
 f = gcf;
 %exportgraphics(f,[subj_id '_mni_trodes' mat2str(exp) '.png'],'Resolution',300)
-exportgraphics(f,[subj_id '_EPamp_' mat2str(exp) '.png'],'Resolution',300)
+%exportgraphics(f,[subj_id '_EPamp_' mat2str(exp) '.png'],'Resolution',300)
+exportgraphics(f,[subj_id '_run1_' mat2str(exp) '.png'],'Resolution',300)
 
 %% kurt to TDT electrode conversion
 % load table
@@ -164,12 +166,70 @@ fprintf('confirming stim electrodes %i-%i (%s-%s)\n',e_stim_corrected(1),e_stim_
 % add to table + export 
 % T.amp_norm = EP_amps_norm_transformed;
 % writetable(T,[fn_table '_amps.csv'])
-%% calculate distance from stim electrodes 
+%% camp from 1vAll SVM results
 
-% find center between two stim electrodes
-e_coords = elecs.elecpos; 
+% set colormap 
+c_lookup = sky;
 
-% get distance between all electrodes 
+fn = [subj_id '_cont_stim_train-' num2str(exp) '_1vAllSVM_2Hz_log_bs.csv'];
+T_svm = readtable(fn);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fill TDT table with SVM acc vals
+ch_list = unique(T_svm.ch);
+svm_acc_for_T = zeros(height(T),1);
+T.svm1vA = svm_acc_for_T;
+n_sig_chans = 0;
+
+% for channel present in table svm
+for i = 1:length(ch_list)
+
+    ch = ch_list(i);
+
+    % CHECK if channel 0 is present, means data is zero-indexed and needs
+    % to be fixed in python 
+    if ch == 0
+        disp('ch = 0 is present, data is zero indexed and needs to be fixed in python')
+    end
+
+    test_avg_acc = mean(T_svm.acc(T_svm.ch == ch & (matches(T_svm.label,'test'))));
+
+    % if pass permutation test, add to table T by matching to TDT channel value
+    null_dist = T_svm.acc(T_svm.ch == ch & (matches(T_svm.label,'null')));
+
+    if sum(test_avg_acc < null_dist)/length(null_dist) < 0.05
+        % add to table T 
+        T(T.TDT == ch,'svm1vA') = {test_avg_acc};
+        n_sig_chans = n_sig_chans + 1;
+    end
+
+end
+fprintf('n sig chans = %i\n', n_sig_chans)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% create cmap for accuracy vals
+
+acc = T.svm1vA;
+
+% set all sig channels to 256
+acc(acc > 0) = 256;
+acc(acc == 0) = 1;
+acc_plot = acc;
+
+% normalize to 0-1
+% acc_norm = acc/max(acc);
+% 
+% % map electrode amp to colormap (256 units)
+% acc_plot = round(acc_norm*256);
+% acc_plot(acc_plot == 0) = 1;
+cmap = c_lookup(acc_plot,:);
+
+% stim - red
+map = validatecolor(flatui(2), 'multiple');
+cmap(e_stim_corrected,:) = repmat(map, [length(e_stim_corrected),1]);
+
+fprintf('confirming stim electrodes %i-%i (%s-%s)\n',e_stim_corrected(1),e_stim_corrected(2),elecs.label{e_stim_corrected(1)},elecs.label{e_stim_corrected(2)})
+
 
 %% example 2
 %cmap = jet(n_elecs);
