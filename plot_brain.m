@@ -1,4 +1,4 @@
-function plot_brain(subj_id,subj_dir,native,transparency)
+function fig = plot_brain(subj_id,subj_dir,native,transparency)
 
 fig = figure;
 
@@ -22,7 +22,7 @@ else
     load(fullfile(pwd,'fieldtrip','template','anatomy','surface_pial_right.mat'),'mesh');
     ft_plot_mesh(mesh,'facecolor', [0.8,0.8,0.8]);
 
-    title(sprintf('subj %s electrodes on colin27 MNI brain',subj_id))
+    % title(sprintf('subj %s electrodes on colin27 MNI brain',subj_id))
 
 end
 
@@ -34,5 +34,6 @@ lighting gouraud;
 camlight;
 rotate3d on
 hold on
+fig.Position = [0 0 600 600];
 
 end
