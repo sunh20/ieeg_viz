@@ -14,7 +14,7 @@ e_type = 's';   % s - seeg or depth, c - cortical
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% user specified variables
-subj_id = '2a67ba';
+subj_id = '3fb8ca';
 exp = 1;
 e_stim = [9,10]; % TDT stim electrodes 
 
@@ -42,7 +42,6 @@ notnan_idx = true;
 % electrode settings
 e_size = 50;          
 cmap = [0,0,0];     % color/colormap for elecs, (3,n_electrodes)
-e_alpha = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 assert(strcmp(e_type,'c') || strcmp(e_type,'s'),'e_type input not recognized, please try again')
@@ -52,9 +51,9 @@ assert(strcmp(e_type,'c') || strcmp(e_type,'s'),'e_type input not recognized, pl
 
 % plot brain
 fig = plot_brain(subj_id,subj_dir,native,transparency);
-
+%%
 % plot electrodes
-plot_elecs(subj_id,subj_dir,e_type,native,e_size,e_alpha,cmap,'k',1,notnan_idx); % with black marker
+[splot, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap,'k',0); % with black marker
 
 %% export figure + PNG
 % make sure you change filenames
@@ -63,7 +62,8 @@ plot_elecs(subj_id,subj_dir,e_type,native,e_size,e_alpha,cmap,'k',1,notnan_idx);
 f = gcf;
 %exportgraphics(f,[subj_id '_mni_trodes' mat2str(exp) '.png'],'Resolution',300)
 %exportgraphics(f,[subj_id '_EPamp_' mat2str(exp) '.png'],'Resolution',300)
-exportgraphics(f,[subj_id '_run9_' mat2str(exp) '.png'],'Resolution',300)
+% exportgraphics(f,[subj_id '_run9_' mat2str(exp) '.png'],'Resolution',300)
+exportgraphics(f,'s.png','Resolution',300)
 
 %% kurt to TDT electrode conversion + highlight stim trodes
 % load table
@@ -91,15 +91,19 @@ cmap(e_stim_corrected,:) = repmat(map, [length(e_stim_corrected),1]);
 
 %% plot stim reponsive sites - S2 only 
 
-%e_responsive = [1, 2, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 19, 21, 23, 25, 28, 29, 31, 32, 33, 34, 35, 37, 39, 41, 50, 52, 55, 56, 58, 75, 87, 88, 90, 91, 97, 99, 105, 106, 107, 108, 109, 110, 111, 113, 120, 121, 122, 123, 125, 127, 128];
-e_responsive = [1,11,12,32,33,34,35];
+%e_responsive = [9, 11, 12, 13, 14, 15, 16, 19, 21, 23, 29, 31, 32, 33, 34, 35, 39, 58, 88, 106, 107, 108, 109, 110, 120, 122, 123, 125, 127];
+% e_responsive = [1,11,12,32,33,34,35]; % responseive to stim [2,3]
+e_responsive = [9,10,31,32,33,34,35,39,50]; % responsive to stim [11,12]
+% e_responsive = [];
 e_corrected = [];
 
 for e = 1:length(e_responsive)
     e_corrected = [e_corrected T(T.TDT == e_responsive(e),:).kurt];
 end
 
-e_stim = [2,3];
+% e_stim = [5:9,12:14,21:24,28:32]; % all stim
+%e_stim = [2,3];
+e_stim = [11,12];
 e_corrected_stim = [];
 
 for e = 1:length(e_stim)
@@ -111,31 +115,22 @@ e_active = [e_responsive, e_stim];
 e_inactive = 1:sum(notnan_idx); 
 e_inactive_corrected = [];
 
-% remove channels
-for e = 1:length(e_active)
-    e_inactive(e_active(e) == e_inactive) = [];
-end
-% then convert
-for e = 1:length(e_inactive)
-    e_inactive_corrected = [e_inactive_corrected T(T.TDT == e_inactive(e),:).kurt];
-end
-% reassign for plotting
-e_inactive = e_inactive_corrected;
-
-% highlight stim electrodes
+% assign electrode colors
 n_elecs = length(elecs.elecpos);
 
 % default color: black
 map = validatecolor('k', 'multiple');
 cmap = repmat(map, [n_elecs,1]);
 
-% highlight repsonsive electrodes: green
+% repsonsive electrodes: green
 map = validatecolor(flatui(3), 'multiple');
 cmap(e_corrected,:) = repmat(map, [length(e_corrected),1]);
 
-% highlight stim electrodes: red
+% stim electrodes: red
 map = validatecolor(flatui(2), 'multiple');
 cmap(e_corrected_stim,:) = repmat(map, [length(e_corrected_stim),1]);
+
+fprintf("%i stim channels and %i responsive channels\n",length(e_stim),length(e_responsive))
 
 %% cmap: EP Measure amplitude response + save new table
 % electrodes that aren't recorded on TDT will be set to 0

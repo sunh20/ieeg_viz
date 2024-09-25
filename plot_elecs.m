@@ -1,9 +1,7 @@
-function [splot, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,e_alpha,cmap,markercolor,remove_non_TDT,notnan_idx)
+function [splot, elecs] = plot_elecs(subj_id,subj_dir,e_type,native,e_size,cmap,markercolor,remove_non_TDT,notnan_idx)
 
 if ~exist('markercolor','var')
     markercolor = 'w';
-else
-    markercolor = 'k';
 end
 
 if native
@@ -28,27 +26,36 @@ end
 
 e = elecs.elecpos;
 
-% % turn e_active into boolean array
-% e_idx_expand = zeros(1,length(e));
-% e_idx_expand(e_idx) = 1;
+% use cmap to figure out inactive electrodes 
+cmap_flat = sum(cmap,2);
+e_inactive = cmap_flat == 0;
 
 % use notnan to remove non TDT electrodes from plot and cmap
 if remove_non_TDT
     e = e(notnan_idx,:);
     cmap_plot = cmap(notnan_idx,:);
+    e_inactive = e_inactive(notnan_idx);
 
 else
     cmap_plot = cmap;
 end
 
-% plot channels
-splot = scatter3(e(:,1), e(:,2), e(:,3), [], e(:,3), ...
+% plot channels - inactive 
+scatter3(e(e_inactive,1), e(e_inactive,2), e(e_inactive,3), [], e(e_inactive,3), ...
 'o', 'filled', ...
 'SizeData', e_size, ...
 'MarkerEdgeColor',markercolor, ...
-'MarkerFaceAlpha',e_alpha);
+'MarkerEdgeAlpha',0.5,...
+'MarkerFaceAlpha',0);
 
-splot.CData = cmap_plot;
+% plot channels - active 
+splot = scatter3(e(~e_inactive,1), e(~e_inactive,2), e(~e_inactive,3), [], e(~e_inactive,3), ...
+'o', 'filled', ...
+'SizeData', e_size, ...
+'MarkerEdgeColor',markercolor, ...
+'MarkerFaceAlpha',1);
+
+splot.CData = cmap_plot(~e_inactive,:);
 
 % plot transparent channels 
   
